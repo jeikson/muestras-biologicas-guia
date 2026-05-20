@@ -1142,8 +1142,11 @@ for ui, u in enumerate(units):
                 html += '<div class="tbl"><table><tbody>'
                 for row in data:
                     html += '<tr>'
-                    for cell in row:
-                        html += f'<td>{cell}</td>'
+                    if isinstance(row, str):
+                        html += f'<td>{row}</td>'
+                    else:
+                        for cell in row:
+                            html += f'<td>{cell}</td>'
                     html += '</tr>'
                 html += '</tbody></table></div>'
             elif kind == "grid2":
