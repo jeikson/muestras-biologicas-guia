@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gestión de Muestras Biológicas — Guía Interactiva</title>
+<style>
+:root{--bg:#0a0f1f;--card:#111827;--card2:#1a2332;--a:#00d4aa;--a2:#7c5bf0;--t:#e8ecf5;--t2:#8892b0;--b:#4a9eff;--y:#f5c842;--o:#ff9f43;--r:#ff6b6b}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
+::selection{background:rgba(0,212,170,.25)}
+.topbar{background:linear-gradient(135deg,#0a1025,#14203a);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+.topbar h1{font-size:17px;font-weight:800;background:linear-gradient(135deg,var(--a),#48dbfb);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .sub{font-size:10px;color:var(--t2);-webkit-text-fill-color:var(--t2)}
+.searchbox{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 12px;color:var(--t);width:200px;font-size:12px;outline:none;transition:.3s}
+.searchbox:focus{border-color:var(--a);background:rgba(0,212,170,.05);width:240px}
+.searchbox::placeholder{color:var(--t2);opacity:.6}
+.nav{display:flex;gap:5px;padding:10px 20px;background:rgba(10,14,26,.95);border-bottom:1px solid rgba(255,255,255,.04);position:sticky;top:47px;z-index:99;overflow-x:auto}
+.nav-btn{padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:11px;transition:.2s;background:var(--card);color:var(--t2);white-space:nowrap;flex-shrink:0}
+.nav-btn:hover{background:var(--card2);transform:translateY(-1px)}
+.nav-btn.active{background:linear-gradient(135deg,var(--a),#00b894);color:#0a0e1a;box-shadow:0 2px 12px rgba(0,212,170,.2)}
+.main{max-width:1000px;margin:0 auto;padding:14px 18px 50px}
+.unit{display:none;animation:fadeIn .3s}
+.unit.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{background:linear-gradient(135deg,var(--card),#0e1729);border-radius:12px;padding:20px 24px;margin-bottom:14px;border:1px solid rgba(255,255,255,.05)}
+.hero h2{font-size:18px;font-weight:700;margin-bottom:5px}
+.hero h2 .c{color:var(--a)}
+.hero p{color:var(--t2);font-size:12px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.badge{padding:3px 9px;border-radius:5px;font-size:10px;font-weight:500}
+.b1{background:rgba(0,212,170,.12);color:var(--a)}
+.b2{background:rgba(74,158,255,.12);color:var(--b)}
+.b3{background:rgba(124,91,240,.12);color:var(--a2)}
+.secc{background:var(--card);border-radius:12px;margin-bottom:10px;border:1px solid rgba(255,255,255,.04);overflow:hidden}
+.sech{display:flex;align-items:center;gap:8px;padding:12px 16px;cursor:pointer;user-select:none;transition:.15s;font-size:13px;font-weight:600}
+.sech:hover{background:rgba(255,255,255,.02)}
+.sech .arrow{font-size:10px;transition:.2s;width:16px;text-align:center;color:var(--a);flex-shrink:0}
+.sech .arrow.o{transform:rotate(90deg)}
+.sech .num{color:var(--a);font-weight:700;min-width:30px;font-size:12px}
+.secb{display:none;padding:0 16px 14px;border-top:1px solid rgba(255,255,255,.04);padding-top:10px}
+.secb.open{display:block}
+.stitle{padding:6px 10px;font-size:12px;font-weight:600;color:var(--t);background:var(--card2);border-radius:6px;margin:8px 0 6px;display:flex;align-items:center;gap:6px;border-left:3px solid var(--a)}
+.stitle.purple{border-left-color:var(--a2)}
+.stitle.orange{border-left-color:var(--o)}
+.cbody{padding:2px 6px}
+.cbody p{font-size:12px;line-height:1.65;color:var(--t2);margin-bottom:6px}
+.cbody ul{list-style:none;padding:0 4px}
+.cbody ul li{font-size:12px;color:var(--t2);padding:3px 0 3px 18px;position:relative;line-height:1.5}
+.cbody ul li::before{content:"\25b8";position:absolute;left:2px;color:var(--a);font-weight:700}
+.tbl{overflow-x:auto;margin:6px 0;border-radius:6px;font-size:11px}
+.tbl table{width:100%;border-collapse:collapse}
+.tbl th{background:var(--card2);color:var(--a);padding:6px 10px;text-align:left;font-weight:600;border-bottom:1px solid rgba(0,212,170,.15);white-space:nowrap;font-size:11px}
+.tbl td{padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--t2);vertical-align:top}
+.tbl tr:hover td{background:rgba(0,212,170,.03)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+.gitem{padding:8px 10px;background:var(--card2);border-radius:6px;border:1px solid rgba(255,255,255,.04)}
+.gitem .gl{color:var(--a);font-size:11px;font-weight:600;margin-bottom:2px}
+.gitem .gv{color:var(--t2);font-size:11px;line-height:1.4}
+.dia{display:flex;flex-direction:column;gap:4px;padding:8px 0}
+.dstep{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--card2);border-radius:6px;font-size:11px;color:var(--t2)}
+.dstep .arr{color:var(--a);font-weight:700;min-width:20px}
+.dstep:not(:last-child){margin-bottom:2px}
+.dstep.s{margin-left:20px;background:rgba(0,212,170,.04);border-left:2px solid var(--a)}
+.pwrap{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card);border-radius:12px;border:1px solid rgba(255,255,255,.04);margin:14px 0 6px}
+.pbar{flex:1;display:flex;gap:3px}
+.pdot{height:4px;border-radius:2px;flex:1;background:var(--card2);transition:.3s}
+.pdot.a{background:linear-gradient(90deg,var(--a),var(--b))}
+.nava{display:flex;gap:5px}
+.navb{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,.08);background:var(--card2);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:.15s}
+.navb:hover{background:var(--a);color:#0a0e1a;border-color:var(--a)}
+.st{position:fixed;bottom:20px;right:20px;width:36px;height:36px;border-radius:50%;background:var(--a);color:#0a0e1a;border:none;cursor:pointer;font-size:18px;opacity:0;transition:.3s;pointer-events:none;z-index:50;box-shadow:0 3px 12px rgba(0,212,170,.3)}
+.st.v{opacity:1;pointer-events:auto}
+@media(max-width:768px){
+  .topbar{padding:10px 14px}.searchbox{width:100%}.searchbox:focus{width:100%}
+  .nav{top:42px;padding:8px 12px}
+  .main{padding:10px 12px}.hero{padding:14px 16px}.hero h2{font-size:15px}
+  .secc{padding:0}.sech{padding:10px 12px;font-size:12px}
+  .grid2{grid-template-columns:1fr}
+}
+.qans{padding:10px 14px;background:rgba(0,212,170,.1);border-left:3px solid var(--a);border-radius:0 6px 6px 0;font-size:13px;color:var(--a)!important;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div><h1>🧬 Gestión de Muestras Biológicas</h1><div class="sub">Guía interactiva de estudio • 10 unidades</div></div>
+  <input class="searchbox" id="s" placeholder="\ud83d\udd0d Buscar..." oninput="su(this.value)">
+</div>
+<div class="nav" id="nav"><button class="nav-btn active" onclick="x(0)"><b>U1</b> Análisis de la estructura organizativa d…</button><button class="nav-btn" onclick="x(1)"><b>U2</b> Identificación de la documentación del l…</button><button class="nav-btn" onclick="x(2)"><b>U3</b> Identificación de muestras biológicas</button><button class="nav-btn" onclick="x(3)"><b>U4</b> Muestras de sangre</button><button class="nav-btn" onclick="x(4)"><b>U5</b> Muestras de orina</button><button class="nav-btn" onclick="x(5)"><b>U6</b> Muestras de obtención directa</button><button class="nav-btn" onclick="x(6)"><b>U7</b> Muestras procedentes de líquidos biológi…</button><button class="nav-btn" onclick="x(7)"><b>U8</b> Exudados y muestras especiales</button><button class="nav-btn" onclick="x(8)"><b>U9</b> Muestras de anatomía patológica y citodi…</button><button class="nav-btn" onclick="x(9)"><b>U10</b> Muestras de biobancos y animales de expe…</button></div><div class="main" id="m"><div class="unit active" id="u0">
+<div class="hero"><h2>🏥 <span class="c">U1:</span> Análisis de la estructura organizativa del sector sanitario</h2><p>Sistemas sanitarios, organización administrativa, niveles asistenciales, laboratorios clínicos y fases del análisis</p>
+<div class="badges"><span class="badge b1">📖 5 secciones</span>
+<span class="badge b2">📄 16 temas</span>
+<span class="badge b3">🏥 U1</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">1.1</span>Importancia y tipos de sistemas sanitarios</div>
+<div class="secb">
+<div class="stitle "> Sistema sanitario</div>
+<div class="cbody">
+<ul><li>Conjunto de instituciones, personal especializado, normas y medios que proporcionan asistencia sanitaria a una población</li><li>Objetivos: mejorar la salud, asegurar equidad en el acceso, estar legitimado ante la población</li></ul></div>
+<div class="stitle purple">🔲 Organización de un sistema sanitario</div>
+<div class="cbody">
+<div class="tbl"><table><tbody><tr><td>F</td><td>i</td><td>n</td><td>a</td><td>n</td><td>c</td><td>i</td><td>a</td><td>c</td><td>i</td><td>ó</td><td>n</td><td> </td><td>→</td><td> </td><td>S</td><td>o</td><td>p</td><td>o</td><td>r</td><td>t</td><td>e</td><td> </td><td>e</td><td>c</td><td>o</td><td>n</td><td>ó</td><td>m</td><td>i</td><td>c</td><td>o</td><td> </td><td>(</td><td>i</td><td>m</td><td>p</td><td>u</td><td>e</td><td>s</td><td>t</td><td>o</td><td>s</td><td>,</td><td> </td><td>c</td><td>o</td><td>t</td><td>i</td><td>z</td><td>a</td><td>c</td><td>i</td><td>o</td><td>n</td><td>e</td><td>s</td><td>,</td><td> </td><td>c</td><td>u</td><td>o</td><td>t</td><td>a</td><td>s</td><td> </td><td>p</td><td>r</td><td>i</td><td>v</td><td>a</td><td>d</td><td>a</td><td>s</td><td>)</td></tr><tr><td>P</td><td>r</td><td>o</td><td>v</td><td>i</td><td>s</td><td>i</td><td>ó</td><td>n</td><td> </td><td>→</td><td> </td><td>E</td><td>d</td><td>i</td><td>f</td><td>i</td><td>c</td><td>i</td><td>o</td><td>s</td><td>,</td><td> </td><td>m</td><td>a</td><td>t</td><td>e</td><td>r</td><td>i</td><td>a</td><td>l</td><td>e</td><td>s</td><td>,</td><td> </td><td>e</td><td>q</td><td>u</td><td>i</td><td>p</td><td>o</td><td>s</td><td>,</td><td> </td><td>p</td><td>e</td><td>r</td><td>s</td><td>o</td><td>n</td><td>a</td><td>l</td><td> </td><td>(</td><td>p</td><td>ú</td><td>b</td><td>l</td><td>i</td><td>c</td><td>a</td><td>,</td><td> </td><td>p</td><td>r</td><td>i</td><td>v</td><td>a</td><td>d</td><td>a</td><td> </td><td>o</td><td> </td><td>m</td><td>i</td><td>x</td><td>t</td><td>a</td><td>)</td></tr><tr><td>C</td><td>o</td><td>b</td><td>e</td><td>r</td><td>t</td><td>u</td><td>r</td><td>a</td><td> </td><td>p</td><td>o</td><td>b</td><td>l</td><td>a</td><td>c</td><td>i</td><td>o</td><td>n</td><td>a</td><td>l</td><td> </td><td>→</td><td> </td><td>Q</td><td>u</td><td>i</td><td>é</td><td>n</td><td> </td><td>p</td><td>u</td><td>e</td><td>d</td><td>e</td><td> </td><td>a</td><td>c</td><td>c</td><td>e</td><td>d</td><td>e</td><td>r</td><td> </td><td>a</td><td>l</td><td> </td><td>s</td><td>i</td><td>s</td><td>t</td><td>e</td><td>m</td><td>a</td></tr><tr><td>O</td><td>r</td><td>g</td><td>a</td><td>n</td><td>i</td><td>z</td><td>a</td><td>c</td><td>i</td><td>ó</td><td>n</td><td> </td><td>i</td><td>n</td><td>t</td><td>e</td><td>r</td><td>n</td><td>a</td><td> </td><td>→</td><td> </td><td>P</td><td>a</td><td>r</td><td>a</td><td> </td><td>q</td><td>u</td><td>e</td><td> </td><td>e</td><td>l</td><td> </td><td>s</td><td>i</td><td>s</td><td>t</td><td>e</td><td>m</td><td>a</td><td> </td><td>s</td><td>e</td><td>a</td><td> </td><td>s</td><td>o</td><td>s</td><td>t</td><td>e</td><td>n</td><td>i</td><td>b</td><td>l</td><td>e</td></tr></tbody></table></div></div>
+<div class="stitle purple">📊 Tipos de sistemas sanitarios</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Modelo</th><th>Características</th><th>Ejemplo</th></tr><tr><td>Liberal</td><td>Privado, financiación por seguros</td><td>EE.UU. (parcial)</td></tr><tr><td>Seguros Sociales</td><td>Cotizaciones trabajadores/empresarios</td><td>Alemania, Francia</td></tr><tr><td>Nacional de Salud</td><td>Impuestos generales, universal</td><td>España (SNS), Reino Unido</td></tr><tr><td>Mixto</td><td>Combina elementos públicos y privados</td><td>Varios países</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">1.2</span>Sistema sanitario español: SNS</div>
+<div class="secb">
+<div class="stitle "> Ley General de Sanidad</div>
+<div class="cbody">
+<ul><li>Regula el Sistema Nacional de Salud (SNS) en España</li><li>Principios: Universalidad, Atención integrada, Recursos, Participación, Financiación, Eficacia</li></ul></div>
+<div class="stitle purple">📌 Organización administrativa</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>Nivel central → Ministerio de Sanidad: fija líneas generales de actuación del SNS</div><div class="dstep"><span class="arr">→</span>Nivel autonómico → Consejería de Sanidad de cada CC.AA.: gestiona recursos</div><div class="dstep"><span class="arr">→</span>Nivel área de salud → Unidad geográfica y funcional, bajo revisión de las CC.AA.</div></div></div>
+<div class="stitle "> Prestaciones del SNS</div>
+<div class="cbody">
+<ul><li>Asistencia de medicina general y todas las especialidades (ordinaria y urgencia)</li><li>Prestación farmacéutica extrahospitalaria</li><li>Rehabilitación y transporte de enfermos</li><li>Prótesis y vehículos para discapacitados</li><li>Tratamiento y estancia en centros sanitarios</li></ul></div>
+<div class="stitle purple">📊 Niveles asistenciales</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Nivel</th><th>Descripción</th><th>Dónde se presta</th></tr><tr><td>Atención Primaria</td><td>Primer nivel, cercano y generalista. Prevención, promoción y problemas comunes</td><td>Centros de salud</td></tr><tr><td>Atención Especializada</td><td>Segundo nivel, médicos especialistas, pruebas complejas y tratamientos avanzados</td><td>Hospitales</td></tr><tr><td>Atención Sociosanitaria</td><td>Para pacientes con patologías crónicas que requieren cuidados prolongados</td><td>Centros sociosanitarios</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">1.3</span>Organización del laboratorio de análisis clínico</div>
+<div class="secb">
+<div class="stitle "> Core Lab (Laboratorio Central)</div>
+<div class="cbody">
+<ul><li>Laboratorio central automatizado que concentra muestras de distintos servicios</li><li>Reduce costes y optimiza recursos</li><li>Evita duplicidades y mejora calidad de resultados</li><li>Mejora tiempos de respuesta</li></ul></div>
+<div class="stitle purple">📌 Organigrama del laboratorio clínico</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>Dirección del laboratorio</div><div class="dstep"><span class="arr">→</span>Facultativos especialistas: supervisan y validan resultados</div><div class="dstep"><span class="arr">→</span>Técnicos de laboratorio: toman y analizan muestras, gestionan existencias</div><div class="dstep"><span class="arr">→</span>Personal administrativo: registros, informes, contacto</div></div></div>
+<div class="stitle "> Funciones del técnico de laboratorio clínico</div>
+<div class="cbody">
+<ul><li>Gestionar existencias de material de laboratorio</li><li>Mantener el laboratorio organizado y limpio (incluyendo eliminación de residuos)</li><li>Preparar equipos y revisar su funcionamiento óptimo</li><li>Toma y análisis de muestras</li><li>Registro y examinación de resultados de experimentos</li><li>Comunicación de resultados a facultativos</li><li>Preparación de materiales de apoyo a la docencia</li><li>Supervisión del personal en prácticas</li></ul></div>
+<div class="stitle "> Funciones del técnico de anatomía patológica</div>
+<div class="cbody">
+<ul><li>Colaborar en la realización de necropsias clínicas o médico-legales</li><li>Procesar muestras de material biológico para estudio por el patólogo</li><li>Seleccionar y aportar datos para diagnóstico de citologías ginecológicas</li><li>Realizar citologías de líquidos, secreciones, improntas y muestras no ginecológicas</li><li>Registrar fotográficamente piezas y preparaciones</li><li>Aplicar técnicas de inmunohistoquímica, inmunofluorescencia y biología molecular</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">1.4</span>Fases de la determinación analítica</div>
+<div class="secb">
+<div class="stitle purple">📌 Las tres fases</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>FASE PREANALÍTICA → Incluye desde la solicitud médica hasta que la muestra está lista en el laboratorio. Responsabilidad principal: médicos y enfermeros</div><div class="dstep"><span class="arr">→</span>FASE ANALÍTICA → Abarca todos los procesos donde se manipula la muestra y se realizan análisis. Responsabilidad: técnicos de laboratorio</div><div class="dstep"><span class="arr">→</span>FASE POSTANALÍTICA → Interpretación de resultados, elaboración de informes y conservación de muestras para repetir pruebas si es necesario</div></div></div>
+<div class="stitle purple">📌 Recorrido de una muestra (desde extracción hasta resultado)</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Toma de muestras por personal especializado</div><div class="dstep"><span class="arr">→</span>2️⃣ Pruebas POCT (punto de cuidados): resultados casi inmediatos en el centro de toma</div><div class="dstep"><span class="arr">→</span>3️⃣ Laboratorios satélite: pruebas urgentes o rutinarias (<60 min)</div><div class="dstep"><span class="arr">→</span>4️⃣ Laboratorio central: análisis complejos o especializados (pueden tardar días)</div><div class="dstep"><span class="arr">→</span>5️⃣ Envío de resultados al centro de origen para interpretación</div></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">1.5</span>Aspectos económicos en laboratorios</div>
+<div class="secb">
+<div class="stitle "> Centros concertados</div>
+<div class="cbody">
+<ul><li>Centros privados que han llegado a acuerdos con entidades públicas</li><li>Prestan servicio con financiación parcial o total del Estado</li></ul></div>
+<div class="stitle purple">📊 Gestión de almacén de suministros</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Sistema</th><th>Significado</th><th>Uso en sanidad</th></tr><tr><td>FIFO</td><td>First In, First Out (lo que entró primero se usa primero)</td><td>Muy común: evita caducidades</td></tr><tr><td>LIFO</td><td>Last In, First Out (lo que entró último se usa primero)</td><td>Menos común en sanidad</td></tr><tr><td>PMP</td><td>Precio Medio Ponderado</td><td>Estimación de costes según cantidades</td></tr></tbody></table></div></div>
+<div class="stitle "> Materiales en el laboratorio</div>
+<div class="cbody">
+<ul><li>Fungibles (desechables): uso limitado, se renuevan periódicamente (guantes, puntas, tubos)</li><li>No fungibles (reutilizables): larga vida útil (microscopios, centrifugadoras, neveras)</li></ul></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U1</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Sistema sanitario = instituciones + personal + normas + medios para asistencia sanitaria</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">SNS español: Universalidad, Atención integrada, Participación, Financiación, Eficacia</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Organización: Nivel central (Ministerio) → Autonómico (Consejería) → Área de Salud</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Atención Primaria (centros de salud) vs Especializada (hospitales)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Core Lab: laboratorio central automatizado que optimiza recursos y reduce costes</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Fases: Preanalítica (toma/transporte) → Analítica (análisis) → Postanalítica (informe)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Funciones del técnico: toma de muestras, análisis, gestión de existencias y residuos</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U1/10</span>
+<div class="nava"><button class="navb" onclick="xma(-1,9)">‹</button>
+<button class="navb" onclick="xmi(1,9)">›</button></div></div></div>
+<div class="unit" id="u1">
+<div class="hero"><h2>📋 <span class="c">U2:</span> Identificación de la documentación del laboratorio</h2><p>Recepción, registro, trazabilidad, sistemas informáticos, documentación gráfica, bioética y gestión de almacén</p>
+<div class="badges"><span class="badge b1">📖 5 secciones</span>
+<span class="badge b2">📄 13 temas</span>
+<span class="badge b3">📋 U2</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">2.1</span>Recepción, registro y clasificación de muestras</div>
+<div class="secb">
+<div class="stitle purple">📌 Flujo de trabajo en el laboratorio</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Recepción de muestras</div><div class="dstep"><span class="arr">→</span>2️⃣ Registro de muestras</div><div class="dstep"><span class="arr">→</span>3️⃣ Clasificación de muestras</div><div class="dstep"><span class="arr">→</span>4️⃣ Procesamiento de muestras</div><div class="dstep"><span class="arr">→</span>5️⃣ Realización de análisis</div><div class="dstep"><span class="arr">→</span>6️⃣ Validación facultativa</div><div class="dstep"><span class="arr">→</span>7️⃣ Elaboración de informe</div><div class="dstep"><span class="arr">→</span>8️⃣ Distribución y entrega</div><div class="dstep"><span class="arr">→</span>9️⃣ Custodia y conservación de muestras</div></div></div>
+<div class="stitle "> Recepción</div>
+<div class="cbody">
+<ul><li>Verificar que la muestra llega en condiciones adecuadas</li><li>Comprobar que la solicitud coincide con la muestra</li><li>Dato imprescindible: nombre del paciente</li></ul></div>
+<div class="stitle "> Registro</div>
+<div class="cbody">
+<ul><li>Introducir la muestra en el sistema con todos los datos del paciente</li><li>Asignar un identificador único</li></ul></div>
+<div class="stitle "> Clasificación</div>
+<div class="cbody">
+<ul><li>Agrupar muestras según su naturaleza y las pruebas a realizar</li><li>Distribuir a diferentes secciones o departamentos</li><li>Alicuotado: reparto de la muestra en diferentes recipientes para distintos destinos</li></ul></div>
+<div class="stitle "> Trazabilidad</div>
+<div class="cbody">
+<ul><li>Sistema que permite identificar y ubicar las muestras en cualquier etapa</li><li>Registra determinaciones analíticas y responsables</li><li>Fundamental para la calidad y seguridad del laboratorio</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">2.2</span>Sistemas informáticos de gestión</div>
+<div class="secb">
+<div class="stitle "> Bases de datos</div>
+<div class="cbody">
+<ul><li>Herramientas de software que permiten introducir información y relacionarla entre sí</li><li>En el laboratorio clínico: registrar datos del paciente y agregar resultados de pruebas</li></ul></div>
+<div class="stitle "> SIL - Sistemas de Información del Laboratorio</div>
+<div class="cbody">
+<ul><li>Sistemas compuestos por software + hardware para gestionar información</li><li>Generan documentos de forma automatizada</li><li>Funciones: 1️⃣ Registrar, 2️⃣ Procesar, 3️⃣ Almacenar, 4️⃣ Consultar</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">2.3</span>Registro y archivo de documentación gráfica</div>
+<div class="secb">
+<div class="stitle "> Imágenes macroscópicas</div>
+<div class="cbody">
+<ul><li>Muestran elementos observables a simple vista sin instrumentos</li><li>Aportan información sobre aspecto y estado de tejidos y órganos</li></ul></div>
+<div class="stitle "> Imágenes microscópicas (micrografías)</div>
+<div class="cbody">
+<ul><li>Más frecuentes que las macroscópicas en laboratorio</li><li>Requieren microscopio para su obtención</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">2.4</span>Documentos de normativa bioética</div>
+<div class="secb">
+<div class="stitle "> LOPD - Ley Orgánica de Protección de Datos</div>
+<div class="cbody">
+<ul><li>Protege la confidencialidad de los datos de salud</li><li>Datos especialmente protegidos: datos relativos a la salud</li><li>Información genérica: procedimientos del laboratorio sin implicar pacientes</li><li>Información personal: teléfonos, direcciones, resultados de pruebas</li></ul></div>
+<div class="stitle "> Consentimiento informado</div>
+<div class="cbody">
+<ul><li>Documento que el paciente firma autorizando un procedimiento</li><li>Características: voluntariedad, información clara, posibilidad de revocación</li><li>NO es obligatorio en cualquier analítica (depende del nivel de invasividad)</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">2.5</span>Documentación de almacén</div>
+<div class="secb">
+<div class="stitle "> Ficha de almacén e inventario</div>
+<div class="cbody">
+<ul><li>Ficha de almacén: registro detallado de cada producto (proveedor, lote, caducidad, stock)</li><li>Inventario: listado completo de existencias del laboratorio</li></ul></div>
+<div class="stitle "> Albarán y factura</div>
+<div class="cbody">
+<ul><li>Albarán: documento que se firma como prueba de que una mercancía ha sido entregada</li><li>Factura: documento comercial que detalla la compra y el importe</li></ul></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U2</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Flujo: Recepción → Registro → Clasificación → Procesamiento → Análisis → Validación → Informe</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Trazabilidad: sistema que permite identificar y ubicar muestras en cualquier etapa</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">SIL: Sistemas de Información del Laboratorio (registrar, procesar, almacenar, consultar)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">LOPD: protege datos de salud. Consentimiento informado: voluntario, revocable</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">FIFO (First In, First Out): sistema de almacén más usado en sanidad para evitar caducidades</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Albarán: prueba de entrega de mercancía</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Material fungible (desechable) vs no fungible (reutilizable)</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U2/10</span>
+<div class="nava"><button class="navb" onclick="xma(0,9)">‹</button>
+<button class="navb" onclick="xmi(2,9)">›</button></div></div></div>
+<div class="unit" id="u2">
+<div class="hero"><h2>🧪 <span class="c">U3:</span> Identificación de muestras biológicas</h2><p>Tipos de muestras, características, métodos de análisis, variabilidad preanalítica y errores en la manipulación</p>
+<div class="badges"><span class="badge b1">📖 5 secciones</span>
+<span class="badge b2">📄 12 temas</span>
+<span class="badge b3">🧪 U3</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">3.1</span>Muestras biológicas y su clasificación</div>
+<div class="secb">
+<div class="stitle "> Definición</div>
+<div class="cbody">
+<ul><li>Porciones tomadas de organismos vivos que reúnen las características fisicoquímicas de las partes a analizar</li></ul></div>
+<div class="stitle purple">📊 Tipos de muestras</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Tipo</th><th>Estado</th><th>Ejemplos</th></tr><tr><td>Muestras líquidas</td><td>Líquido</td><td>Sangre, orina, LCR, líquido pleural</td></tr><tr><td>Muestras de tejidos</td><td>Sólido o semisólido</td><td>Biopsias, piezas quirúrgicas</td></tr><tr><td>Muestras citológicas</td><td>Células libres</td><td>Citología cérvico-vaginal, PAAF</td></tr></tbody></table></div></div>
+<div class="stitle purple">📊 Clasificación detallada de muestras líquidas</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Categoría</th><th>Definición</th><th>Ejemplos</th><th>Características</th></tr><tr><td>Muestras líquidas corporales</td><td>Líquidos producidos normalmente por el cuerpo</td><td>Sangre, plasma, orina, líquido pleural</td><td>Información general del organismo</td></tr><tr><td>Secreciones</td><td>Sustancias expulsadas para cumplir una función</td><td>Esputo, saliva, secreción bronquial, gástrica</td><td>Reflejan funcionamiento de órganos</td></tr><tr><td>Exudados</td><td>Líquidos anormales por alteración o patología</td><td>Exudado pleural, peritoneal, purulento</td><td>Composición variable, indican inflamación</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">3.2</span>Muestras de tejidos y citológicas</div>
+<div class="secb">
+<div class="stitle "> Muestras de tejidos</div>
+<div class="cbody">
+<ul><li>Porciones de órganos u otras partes del cuerpo</li><li>La mayoría son sólidas o semisólidas</li><li>Se obtienen por biopsias (métodos invasivos)</li><li>Informan sobre el estado de composición y estructura</li></ul></div>
+<div class="stitle "> Muestras citológicas</div>
+<div class="cbody">
+<ul><li>Soluciones con células libres extraídas de zonas donde se desprenden fácilmente</li></ul></div>
+<div class="stitle purple">📊 Citología descamativa vs aspirativa</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Aspecto</th><th>Citología Descamativa</th><th>Citología Aspirativa</th></tr><tr><td>Definición</td><td>Células desprendidas espontáneamente o por raspado suave</td><td>Células obtenidas mediante aguja con presión negativa</td></tr><tr><td>Método</td><td>Raspado/frotis con espátula, cepillo o hisopo</td><td>Inserción de aguja fina con jeringa</td></tr><tr><td>Invasividad</td><td>No invasiva o mínimamente invasiva</td><td>Levemente invasiva (requiere punción)</td></tr><tr><td>Aplicaciones</td><td>Cuello uterino (Papanicolaou), mucosa oral, tracto digestivo</td><td>Tiroides, mama, ganglios linfáticos, órganos sólidos</td></tr><tr><td>Finalidad</td><td>Diagnóstico de lesiones superficiales o infecciones</td><td>Diagnóstico de tumores, quistes o masas internas</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">3.3</span>Sustancias analizables y tipos de análisis</div>
+<div class="secb">
+<div class="stitle purple">📊 Análisis cualitativo vs cuantitativo</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Aspecto</th><th>Análisis Cualitativo</th><th>Análisis Cuantitativo</th></tr><tr><td>Objetivo</td><td>Identificar presencia o identidad de sustancias</td><td>Medir cantidad o concentración</td></tr><tr><td>Información</td><td>Presencia/ausencia (qué hay)</td><td>Cantidad (cuánto hay)</td></tr><tr><td>Ejemplos</td><td>Tinciones, estudios anatomopatológicos</td><td>Análisis rutinarios de sangre, conteo celular</td></tr><tr><td>Resultado</td><td>Positivo/negativo, tipo de agente</td><td>Valor numérico (concentración)</td></tr><tr><td>Complejidad</td><td>Generalmente más simple y rápida</td><td>Requiere equipos especializados</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">3.4</span>Variabilidad preanalítica del paciente</div>
+<div class="secb">
+<div class="stitle purple">🔲 Factores fisiológicos</div>
+<div class="cbody">
+<div class="tbl"><table><tbody><tr><td>Edad</td><td>Los valores de referencia cambian con la edad del paciente</td></tr><tr><td>Sexo</td><td>Diferencias hormonales y hematológicas entre hombres y mujeres</td></tr><tr><td>Embarazo</td><td>Alteraciones en múltiples parámetros analíticos</td></tr><tr><td>Ciclos biológicos</td><td>Variaciones diarias, mensuales o estacionales</td></tr><tr><td>Dieta</td><td>Ayuno necesario para valores constantes de glucosa, lípidos, etc.</td></tr><tr><td>Estilo de vida</td><td>Ejercicio intenso aumenta ácidos grasos y ácido láctico</td></tr></tbody></table></div></div>
+<div class="stitle purple">📊 Factores en la toma de muestras</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Factor</th><th>Descripción</th><th>Impacto</th></tr><tr><td>Dieta</td><td>Alimentación altera glucosa, albúmina, lípidos, ácido úrico</td><td>Se recomienda ayuno previo</td></tr><tr><td>Tiempo torniquete</td><td>Uso prolongado durante extracción</td><td>Concentra componentes y altera la muestra</td></tr><tr><td>Sueros terapéuticos</td><td>Paciente con vía intravenosa</td><td>Tomar muestra en brazo contrario</td></tr><tr><td>Ejercicio intenso</td><td>Actividad física antes de la toma</td><td>Aumenta ácidos grasos, alanina, ácido láctico</td></tr></tbody></table></div></div>
+<div class="stitle purple">📊 Interferencias analíticas</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Interferencia</th><th>Descripción</th><th>Efecto</th></tr><tr><td>Hemólisis</td><td>Rotura de glóbulos rojos (hemoglobina >0,3 g/L)</td><td>Altera valores, generalmente los aumenta</td></tr><tr><td>Lipemia</td><td>Altos niveles de lípidos por falta de ayuno</td><td>Afecta determinación de varios analitos</td></tr><tr><td>Fármacos</td><td>Medicamentos que alteran resultados</td><td>Cambian valores; informar y evaluar</td></tr><tr><td>Drogas autorizadas</td><td>Alcohol, tabaco, etc.</td><td>Provocan alteraciones conocidas</td></tr></tbody></table></div></div>
+<div class="stitle purple">📊 Variabilidad según el sexo. Salud y enfermedad</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Parámetro</th><th>Diferencia</th></tr><tr><td>Glóbulos rojos, hemoglobina, hematocrito</td><td>Valores más altos en hombres que en mujeres</td></tr><tr><td>Ferritina</td><td>Clave en mujeres por pérdidas menstruales y embarazo</td></tr><tr><td>PSA (Antígeno prostático específico)</td><td>Presente solo en hombres, marcador cáncer de próstata</td></tr><tr><td>Hormonas sexuales</td><td>Mujeres: FSH, LH, estradiol, progesterona. Hombres: testosterona, SHBG</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">3.5</span>Errores en la manipulación preanalítica</div>
+<div class="secb">
+<div class="stitle purple">📊 Principales errores</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Error</th><th>Descripción</th></tr><tr><td>Análisis no pertinentes</td><td>Pruebas innecesarias o en magnitudes incorrectas</td></tr><tr><td>Ignorar características del paciente</td><td>No considerar edad, sexo, medicación</td></tr><tr><td>Incumplimiento del ayuno</td><td>Paciente no ayuna antes de la toma</td></tr><tr><td>Toma incorrecta de muestra</td><td>Muestra obtenida de forma inadecuada</td></tr><tr><td>Etiquetado incorrecto</td><td>Muestra mal identificada</td></tr><tr><td>Contaminación por mala manipulación</td><td>Durante recolección o manipulación</td></tr><tr><td>Contaminación en transporte</td><td>Durante el traslado al laboratorio</td></tr><tr><td>Mala conservación en transporte</td><td>Condiciones inadecuadas de temperatura</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U3</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Muestras biológicas: porciones de organismos vivos para análisis</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Líquidas corporales (información general) vs Secreciones (función órganos) vs Exudados (inflamación)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Citología descamativa (raspado) vs aspirativa (PAAF con aguja)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Análisis cualitativo (qué hay) vs cuantitativo (cuánto hay)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Variabilidad preanalítica: edad, sexo, dieta, ejercicio, fármacos, hemólisis, lipemia</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">PSA: marcador específico de cáncer de próstata en hombres</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Errores preanalíticos: muestra mal etiquetada, contaminación, ayuno incumplido</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U3/10</span>
+<div class="nava"><button class="navb" onclick="xma(1,9)">‹</button>
+<button class="navb" onclick="xmi(3,9)">›</button></div></div></div>
+<div class="unit" id="u3">
+<div class="hero"><h2>🩸 <span class="c">U4:</span> Muestras de sangre</h2><p>Obtención de muestras, aditivos, anticoagulantes, interferencias, componentes sanguíneos y productos derivados</p>
+<div class="badges"><span class="badge b1">📖 6 secciones</span>
+<span class="badge b2">📄 15 temas</span>
+<span class="badge b3">🩸 U4</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">4.1</span>Obtención de muestras sanguíneas</div>
+<div class="secb">
+<div class="stitle purple">🔲 Consideraciones previas</div>
+<div class="cbody">
+<div class="tbl"><table><tbody><tr><td>Postura del paciente</td><td>La posición afecta la concentración de la muestra. En pacientes encamados los componentes pueden aparecer 5-15% más concentrados</td></tr><tr><td>Perfusiones y transfusiones</td><td>Todos los componentes se alteran al introducir o extraer sangre. Tomar muestra en brazo contrario a la vía</td></tr><tr><td>Intervenciones diagnósticas/terapéuticas</td><td>Medicamentos pueden alterar los parámetros</td></tr><tr><td>Momento de la toma</td><td>Varía según el momento del día o del mes (mujeres)</td></tr><tr><td>Dieta</td><td>Impacto directo sobre glucosa, lípidos, etc. Ayuno necesario</td></tr><tr><td>Método empleado</td><td>Instrumentos y aditivos pueden alterar la muestra</td></tr></tbody></table></div></div>
+<div class="stitle "> Materiales para extracción</div>
+<div class="cbody">
+<ul><li>Sistema de vacío (tubos con presión negativa)</li><li>Agujas y adaptadores</li><li>Torniquete, alcohol, algodón, gasas estériles</li><li>Guantes, apósitos, contenedor de residuos</li></ul></div>
+<div class="stitle purple">📌 Procedimiento de extracción venosa</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Identificar al paciente</div><div class="dstep"><span class="arr">→</span>2️⃣ Colocar torniquete y seleccionar vena</div><div class="dstep"><span class="arr">→</span>3️⃣ Desinfectar la zona</div><div class="dstep"><span class="arr">→</span>4️⃣ Insertar la aguja y extraer la muestra</div><div class="dstep"><span class="arr">→</span>5️⃣ Retirar torniquete ANTES de retirar la aguja</div><div class="dstep"><span class="arr">→</span>6️⃣ Retirar la aguja y presionar la zona</div><div class="dstep"><span class="arr">→</span>7️⃣ Etiquetar los tubos correctamente</div></div></div>
+<div class="stitle purple">📊 Errores comunes y complicaciones</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Situación</th><th>Causa</th></tr><tr><td>La sangre deja de fluir</td><td>Venas colapsadas o mala colocación del tubo (sin presión negativa)</td></tr><tr><td>Sangre insuficiente</td><td>Torniquete demasiado apretado o posición inadecuada del brazo</td></tr><tr><td>Hematoma</td><td>Mala punción o no presionar después de retirar</td></tr><tr><td>Hemólisis</td><td>Agitar demasiado o aguja muy fina</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">4.2</span>Extracción arterial y capilar. Hemocultivos</div>
+<div class="secb">
+<div class="stitle "> Extracción arterial</div>
+<div class="cbody">
+<ul><li>Utiliza jeringuillas especiales (gasometría, autollenado o aspiración)</li><li>Uso: valoración del intercambio gaseoso en sangre</li><li>Se usa tubo con heparina (anticoagulante)</li><li>Análisis en menos de 30 minutos</li><li>No agitar en exceso</li></ul></div>
+<div class="stitle "> Extracción capilar</div>
+<div class="cbody">
+<ul><li>Punción cutánea para obtener sangre por capilaridad</li><li>Volumen pequeño, ideal para niños pequeños</li><li>Se descartan primeras gotas para evitar contaminación</li><li>Método menos agresivo pero volumen limitado</li></ul></div>
+<div class="stitle purple">📊 Hemocultivos</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Característica</th><th>Aeróbicos</th><th>Anaeróbicos</th></tr><tr><td>Condiciones</td><td>Presencia de oxígeno</td><td>Ausencia de oxígeno</td></tr><tr><td>Patógenos</td><td>Bacterias y hongos que necesitan oxígeno</td><td>Bacterias que crecen sin oxígeno</td></tr><tr><td>Tubo</td><td>Diseñado para ambiente oxigenado</td><td>Sellado para evitar oxígeno</td></tr><tr><td>Uso clínico</td><td>Infecciones por microorganismos aeróbicos</td><td>Infecciones por anaerobios</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">4.3</span>Aditivos y código de color de tubos</div>
+<div class="secb">
+<div class="stitle purple">📊 Tipos de aditivos</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Aditivo</th><th>Función</th><th>Ejemplos</th><th>Uso</th></tr><tr><td>Anticoagulantes</td><td>Evitan o retrasan la coagulación</td><td>EDTA, Heparina, Citrato</td><td>Hematología, bioquímica, coagulación</td></tr><tr><td>Agentes estabilizantes</td><td>Mantienen integridad del ARN</td><td>Conservantes de ARN</td><td>Análisis genéticos</td></tr><tr><td>Gel separador</td><td>Facilita separación del coágulo</td><td>Geles de silicona</td><td>Obtener suero limpio</td></tr></tbody></table></div></div>
+<div class="stitle purple">📊 Conservación aproximada según aditivo</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Aditivo</th><th>Conservación</th></tr><tr><td>EDTA</td><td>24 h a 4°C</td></tr><tr><td>Heparina</td><td>3-24 h según uso</td></tr><tr><td>Citrato</td><td>4-8 h a 4°C</td></tr><tr><td>Gel separador</td><td>8 h TA / 48 h refrigerado / 6 sem -20°C</td></tr></tbody></table></div></div>
+<div class="stitle purple">📌 Orden de extracción de tubos</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Hemocultivos aeróbicos</div><div class="dstep"><span class="arr">→</span>2️⃣ Hemocultivos anaeróbicos</div><div class="dstep"><span class="arr">→</span>3️⃣ Tubo sin aditivos (tubo seco o gel separador, tapa roja/amarilla)</div><div class="dstep"><span class="arr">→</span>4️⃣ Tubos con aditivos (citrato, heparina, EDTA, fluoruro)</div></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">4.4</span>Interferencias en las muestras de sangre</div>
+<div class="secb">
+<div class="stitle purple">🔲 Principales interferencias</div>
+<div class="cbody">
+<div class="tbl"><table><tbody><tr><td>Hemólisis</td><td>Ruptura de glóbulos rojos. Hemoglobina >0,3 g/L. Altera valores, generalmente los aumenta o falsea</td></tr><tr><td>Lipemia</td><td>Exceso de lípidos por falta de ayuno. Afecta determinación de varios analitos</td></tr><tr><td>Ictericia</td><td>Exceso de bilirrubina. Plasma/suero amarillo intenso. >35 µmol/L hiperbilirrubinemia, >100 µmol/L ictericia</td></tr><tr><td>Fármacos y drogas</td><td>Alcohol, tabaco, medicamentos. Alteran resultados analíticos</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">4.5</span>Obtención de plasma y suero</div>
+<div class="secb">
+<div class="stitle purple">📌 Obtención de plasma</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Centrifugación a 1300-1500 g durante 10 min → Diferenciación de fracciones</div><div class="dstep"><span class="arr">→</span>2️⃣ Separación de la fracción superior (Plasma + Plaquetas)</div><div class="dstep"><span class="arr">→</span>3️⃣ Centrifugación a 2500 g durante 15 min → Separación de plaquetas</div><div class="dstep"><span class="arr">→</span>4️⃣ Separar sobrenadante y colocarlo en tubos para análisis</div><div class="dstep"><span class="arr">→</span>Conservación: refrigeración (4°C) o congelación a -80°C</div></div></div>
+<div class="stitle purple">📌 Obtención de suero</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Dejar reposar 20-30 min para coagulación completa. NO agitar para evitar hemólisis</div><div class="dstep"><span class="arr">→</span>2️⃣ Centrifugar a 850-1000 g → Separar suero del coágulo</div><div class="dstep"><span class="arr">→</span>3️⃣ Separar sobrenadante y colocarlo en tubos para análisis</div><div class="dstep"><span class="arr">→</span>Los tubos deben permanecer cerrados para evitar pérdidas de agua</div></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">4.6</span>Componentes de la sangre y productos derivados</div>
+<div class="secb">
+<div class="stitle "> Hemocomponentes vs Hemoderivados</div>
+<div class="cbody">
+<ul><li>Hemocomponentes: uso clínico directo, almacenados en bancos de sangre</li><li>Hemoderivados: uso farmacéutico, médico o de investigación</li></ul></div>
+<div class="stitle "> Derivados plaquetarios</div>
+<div class="cbody">
+<ul><li>PRFC: Plasma Rico en Factores de Crecimiento</li><li>PRP: Plasma Rico en Plaquetas</li><li>Lisado plaquetar</li></ul></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U4</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Extracción venosa: retirar torniquete ANTES de retirar aguja</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Extracción arterial: gasometría. Capilar: niños, poco volumen</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Hemocultivos: aeróbicos (con O₂) y anaeróbicos (sin O₂)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Orden de tubos: Hemocultivos → Tubo seco → Tubos con aditivos</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">EDTA (hematología), Citrato (coagulación), Heparina (bioquímica)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Hemólisis (rótura GR), Lipemia (lípidos), Ictericia (bilirrubina): interferencias</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Plasma: centrifugación inicial a 1300-1500g. Suero: reposo 20-30 min + centrífuga 850-1000g</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U4/10</span>
+<div class="nava"><button class="navb" onclick="xma(2,9)">‹</button>
+<button class="navb" onclick="xmi(4,9)">›</button></div></div></div>
+<div class="unit" id="u4">
+<div class="hero"><h2>💧 <span class="c">U5:</span> Muestras de orina</h2><p>Composición, tipos de muestra, obtención, procesamiento, análisis y sedimento urinario</p>
+<div class="badges"><span class="badge b1">📖 5 secciones</span>
+<span class="badge b2">📄 13 temas</span>
+<span class="badge b3">💧 U5</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">5.1</span>Características y composición de la orina</div>
+<div class="secb">
+<div class="stitle "> Definición</div>
+<div class="cbody">
+<ul><li>Líquido resultante del metabolismo, secretado por los riñones tras procesar la sangre</li><li>Sirve para eliminar toxinas y elementos de desecho</li></ul></div>
+<div class="stitle "> Composición</div>
+<div class="cbody">
+<ul><li>Agua (95%)</li><li>Sales minerales (2%)</li><li>Urea y ácido úrico (3%)</li><li>Otros compuestos (<1%): cloruros, amonio, hormonas, creatinina</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">5.2</span>Orina de una micción (espontánea)</div>
+<div class="secb">
+<div class="stitle "> Obtención</div>
+<div class="cbody">
+<ul><li>Higiene genital previa antes de recoger la muestra</li><li>Descartar el primer chorro</li><li>Recoger la porción media en recipiente estéril</li><li>Cerrar bien el envase y llevar al laboratorio antes de 2 horas</li><li>Si tarda >2h: refrigerar a 4°C para evitar proliferación bacteriana</li></ul></div>
+<div class="stitle purple">📌 Procesamiento</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Recepción y verificación de datos</div><div class="dstep"><span class="arr">→</span>2️⃣ Examen macroscópico</div><div class="dstep"><span class="arr">→</span>3️⃣ Análisis bioquímico (tira reactiva)</div><div class="dstep"><span class="arr">→</span>4️⃣ Sedimento urinario (centrifugación)</div><div class="dstep"><span class="arr">→</span>5️⃣ Urocultivo (si procede)</div></div></div>
+<div class="stitle "> Sedimento urinario</div>
+<div class="cbody">
+<ul><li>Se obtiene por centrifugación de la orina</li><li>Permite observar elementos formes: células, bacterias, cristales, cilindros</li><li>Valora presencia de bacterias, leucocitos, hematíes, células epiteliales</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">5.3</span>Orina de 24 horas</div>
+<div class="secb">
+<div class="stitle "> Obtención</div>
+<div class="cbody">
+<ul><li>Recoger toda la orina excretada durante 24 horas consecutivas</li><li>La primera micción del día se DESCARTA y se anota la hora</li><li>A partir de ahí, toda la orina se recoge en el recipiente</li><li>A las 24h, la última micción se añade al recipiente</li></ul></div>
+<div class="stitle "> Procesamiento</div>
+<div class="cbody">
+<ul><li>Homogeneizar el contenido si se usan varios recipientes</li><li>Medir volumen total</li><li>Tomar alícuota para análisis</li></ul></div>
+<div class="stitle "> Conservantes según análisis</div>
+<div class="cbody">
+<ul><li>Catecolaminas: Ácido clorhídrico 6N</li><li>Proteinuria: sin conservante especial</li><li>NO sirve para urocultivo (los conservantes inhiben bacterias)</li></ul></div>
+<div class="stitle "> Errores comunes</div>
+<div class="cbody">
+<ul><li>Olvidar una micción invalida la prueba (pérdida de solutos totales)</li><li>No homogeneizar antes de tomar la alícuota</li><li>Usar recipiente no estéril</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">5.4</span>Otros métodos de obtención de orina</div>
+<div class="secb">
+<div class="stitle "> Sondaje vesical</div>
+<div class="cbody">
+<ul><li>La muestra debe obtenerse del puerto de punción de la sonda</li><li>NUNCA de la bolsa colectora (alto riesgo de contaminación)</li><li>Idealmente cambiar la sonda antes del cultivo si lleva mucho tiempo</li></ul></div>
+<div class="stitle "> Volúmenes necesarios para cultivo</div>
+<div class="cbody">
+<ul><li>Bacterias: 0,5-1 mL</li><li>Hongos: >20 mL</li><li>Micobacterias: >20 mL</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">5.5</span>Análisis de orina</div>
+<div class="secb">
+<div class="stitle purple">📊 Tipos de análisis</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Análisis</th><th>Qué evalúa</th><th>Objetivo</th></tr><tr><td>Examen macroscópico</td><td>Color, aspecto, olor, turbidez</td><td>Detectar alteraciones visibles (ITU: orina turbia, color verdoso, olor fuerte)</td></tr><tr><td>Análisis bioquímico</td><td>pH, glucosa, proteínas, nitritos, cetonas, densidad</td><td>Tira reactiva: resultados cualitativos/semicuantitativos</td></tr><tr><td>Sedimento urinario</td><td>Células, bacterias, cristales, cilindros</td><td>Detectar infección, inflamación, patología renal</td></tr><tr><td>Urocultivo</td><td>Microorganismos (bacterias, hongos)</td><td>Diagnóstico de infección urinaria con antibiograma</td></tr><tr><td>Citopatología</td><td>Células de la orina</td><td>Detección de cáncer o alteraciones celulares</td></tr></tbody></table></div></div>
+<div class="stitle "> Citología urinaria</div>
+<div class="cbody">
+<ul><li>Muestra recomendada: micción de media mañana (no primera del día, tiene poca celularidad)</li><li>Centrifugar para concentrar células</li><li>Tinción más habitual: Papanicolau</li><li>Alteraciones en tumoración: aumento nuclear, irregularidades de membrana, hipercromasia</li></ul></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U5</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Composición orina: 95% agua, 2% sales, 3% urea/ácido úrico</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Micción espontánea: higiene → descartar primer chorro → porción media → <2h laboratorio</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Orina 24h: descartar primera micción, recoger todo, homogeneizar</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Orina de sonda: puerto de punción, NUNCA bolsa colectora</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Urocultivo: porción media sin conservantes (inhiben bacterias)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Sedimento: centrifugación para ver células, bacterias, cristales, cilindros</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Citología urinaria: micción media mañana, tinción Papanicolau</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U5/10</span>
+<div class="nava"><button class="navb" onclick="xma(3,9)">‹</button>
+<button class="navb" onclick="xmi(5,9)">›</button></div></div></div>
+<div class="unit" id="u5">
+<div class="hero"><h2>🫁 <span class="c">U6:</span> Muestras de obtención directa</h2><p>Esputo, heces y semen: obtención, procesamiento, análisis y aplicaciones clínicas</p>
+<div class="badges"><span class="badge b1">📖 3 secciones</span>
+<span class="badge b2">📄 10 temas</span>
+<span class="badge b3">🫁 U6</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">6.1</span>Esputo</div>
+<div class="secb">
+<div class="stitle "> Definición</div>
+<div class="cbody">
+<ul><li>Líquido segregado por los epitelios de los pulmones, textura mucosa entre líquida y sólida</li><li>Útil para determinar el origen de enfermedades respiratorias</li></ul></div>
+<div class="stitle purple">📊 Métodos de obtención</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Método</th><th>Procedimiento</th><th>Ventajas</th><th>Uso principal</th></tr><tr><td>Expectoración espontánea</td><td>Tos natural, recogida en bote</td><td>Fácil, no invasivo</td><td>Diagnóstico inicial</td></tr><tr><td>Expectoración postural</td><td>Paciente boca abajo, respiración profunda</td><td>Ayuda si dificultad para expectorar</td><td>Situaciones de expectoración difícil</td></tr><tr><td>Expectoración inducida</td><td>Inhalación de aerosoles hipertónicos</td><td>Más controlado</td><td>Pacientes con tos insuficiente</td></tr><tr><td>Lavado broncoalveolar (BAL)</td><td>100-200 mL líquido por broncoscopia</td><td>Muestra de bronquiolos y alveolos</td><td>Microbiología profunda, citología</td></tr><tr><td>PAAF pulmonar</td><td>Aguja atraviesa tejido pulmonar</td><td>Alta calidad, mínima contaminación</td><td>Diagnóstico preciso de lesiones</td></tr></tbody></table></div></div>
+<div class="stitle "> Preparación del paciente</div>
+<div class="cbody">
+<ul><li>Ayunas</li><li>Enjuague con colutorio previamente para evitar contaminación bucal</li></ul></div>
+<div class="stitle purple">📊 Análisis de esputos</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Análisis</th><th>Qué evalúa</th><th>Objetivo</th></tr><tr><td>Macroscópico</td><td>Aspecto general, color, olor, consistencia</td><td>En personas sanas: claro, acuoso e inodoro. Amarillento/verdoso = infección</td></tr><tr><td>Citológico</td><td>Tipo, morfología y alteraciones celulares</td><td>Detectar infecciones, inflamación o neoplasias. Células cilíndricas = vías profundas</td></tr><tr><td>Microbiológico</td><td>Microorganismos patógenos</td><td>S. pneumoniae, H. influenzae, M. tuberculosis (Ziehl-Neelsen)</td></tr><tr><td>Recuento celular</td><td>Cantidad de tipos celulares</td><td>Eosinófilos elevados = alergia. Macrófagos/neutrófilos = infección</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">6.2</span>Heces</div>
+<div class="secb">
+<div class="stitle "> Definición</div>
+<div class="cbody">
+<ul><li>Mezcla de sustancias y microorganismos formada en el intestino grueso a partir de los restos de la digestión</li></ul></div>
+<div class="stitle purple">📊 Preparación del paciente según análisis</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Análisis</th><th>Dieta/Preparación</th><th>Nº muestras</th><th>Conservación</th></tr><tr><td>Sangre oculta</td><td>Evitar carne, embutidos, pescado, lentejas, espinacas, plátanos</td><td>3 (días distintos)</td><td>Cada muestra en frasco individual</td></tr><tr><td>Principios inmediatos</td><td>Sin dieta especial. Suspender bismuto, supositorios</td><td>1</td><td>Normal</td></tr><tr><td>Parásitos</td><td>Restringir medicamentos, papilla de bario, verduras, legumbres, frutas</td><td>3 (días distintos)</td><td>Temperatura ambiente. NO refrigerar</td></tr></tbody></table></div></div>
+<div class="stitle purple">📊 Pruebas y análisis de heces</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Análisis</th><th>Qué evalúa</th><th>Objetivo</th></tr><tr><td>Examen macroscópico</td><td>Consistencia, color, olor, moco, sangre, restos</td><td>Orientativo. Heces líquidas/mucosas = posible infección bacteriana</td></tr><tr><td>Estudio químico</td><td>pH (6,5-6,9), azúcares reductores, sangre oculta, grasas</td><td>Intolerancias, detección sangre no visible</td></tr><tr><td>Examen microscópico</td><td>Fibras musculares, grasas (tinción Negro Sudán), almidón, cristales</td><td>Identificar alteraciones. Cristales de Charcot-Leyden = alergia intestinal</td></tr><tr><td>Coprocultivo</td><td>Patógenos bacterianos</td><td>Identificar bacteria causante de infección</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">6.3</span>Semen</div>
+<div class="secb">
+<div class="stitle "> Obtención y condiciones</div>
+<div class="cbody">
+<ul><li>Abstinencia: entre 72 horas y 7 días</li><li>Método: eyaculación directa en bote estéril o preservativo SIN espermicida</li><li>Los preservativos normales contienen espermicidas que dañan espermatozoides</li><li>Tiempo máximo hasta análisis: 2 horas</li><li>Temperatura de transporte: corporal, evitando frío/calor y luz directa</li><li>Licuefacción: paso de coagulado a líquido en 10-20 min (imprescindible antes de analizar)</li></ul></div>
+<div class="stitle purple">📊 Análisis de semen (seminograma)</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Análisis</th><th>Qué evalúa</th><th>Valores normales (OMS)</th></tr><tr><td>Examen macroscópico</td><td>Color, consistencia, licuefacción</td><td>Color blanco opalescente. Pardo = sangre/inflamación</td></tr><tr><td>Movilidad espermática</td><td>Clasificación A-D</td><td>A+B >50% o A ≥25%</td></tr><tr><td>Concentración espermática</td><td>Nº espermatozoides/mL</td><td>≥15 millones/mL. <15 = oligozoospermia. 0 = azoospermia</td></tr><tr><td>Morfología espermática</td><td>Forma de espermatozoides</td><td>≥4% normales (OMS), hasta 14% (criterios estrictos)</td></tr><tr><td>Agregación/aglutinación</td><td>Acumulaciones entre espermatozoides</td><td>Alta concentración = posible infertilidad</td></tr></tbody></table></div></div>
+<div class="stitle "> Cultivo de semen</div>
+<div class="cbody">
+<ul><li>Detección de patógenos que causan infertilidad</li><li>Se realiza junto con cultivos de orina, secreción prostática o frotis uretral</li></ul></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U6</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Esputo: expectoración espontánea (inicial) → inducida (aerosoles) → BAL (broncoscopia)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Lavado broncoalveolar (BAL): 100-200 mL para microbiología profunda</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Esputo verdoso/amarillento = infección. Células cilíndricas = vías profundas</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Heces: 3 muestras días distintos para parásitos. NO refrigerar</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Tinción Negro Sudán para grasas en heces</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Semen: abstinencia 72h-7días, licuefacción 10-20 min, análisis <2h</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Seminograma: concentración ≥15 mill/mL, movilidad A+B >50%, morfología ≥4% normal</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U6/10</span>
+<div class="nava"><button class="navb" onclick="xma(4,9)">‹</button>
+<button class="navb" onclick="xmi(6,9)">›</button></div></div></div>
+<div class="unit" id="u6">
+<div class="hero"><h2>🩻 <span class="c">U7:</span> Muestras procedentes de líquidos biológicos</h2><p>Líquido cefalorraquídeo, líquidos serosos (pleural, peritoneal, pericárdico) y líquido sinovial</p>
+<div class="badges"><span class="badge b1">📖 3 secciones</span>
+<span class="badge b2">📄 9 temas</span>
+<span class="badge b3">🩻 U7</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">7.1</span>Líquido cefalorraquídeo (LCR)</div>
+<div class="secb">
+<div class="stitle "> Definición</div>
+<div class="cbody">
+<ul><li>Líquido que se encuentra en el cráneo, entre la aracnoides y la piamadre</li><li>Embebe el encéfalo y la médula espinal</li><li>El tejido nervioso intercambia sustancias (nutrientes y desechos) a través del LCR</li></ul></div>
+<div class="stitle "> Obtención</div>
+<div class="cbody">
+<ul><li>Método: punción percutánea lumbar</li><li>Inserción de aguja en espacio intervertebral L3-L4 o L4-L5</li><li>Procedimiento estéril y con anestesia local</li><li>Se recogen 3-4 tubos para diferentes análisis</li></ul></div>
+<div class="stitle "> Procesamiento y conservación</div>
+<div class="cbody">
+<ul><li>Procesar inmediatamente (las células se degradan rápido)</li><li>Centrifugar para separar células del sobrenadante</li><li>Conservar a 4°C si no se analiza de inmediato</li><li>Congelar a -20°C o -80°C para análisis posteriores</li></ul></div>
+<div class="stitle "> Análisis del LCR</div>
+<div class="cbody">
+<ul><li>Examen físico: aspecto, color, presión</li><li>Recuento celular: leucocitos, hematíes</li><li>Bioquímico: glucosa, proteínas, lactato</li><li>Microbiológico: Gram, cultivo, antigenuria</li><li>Normal: LCR claro e incoloro. Turbio = infección/meningitis</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">7.2</span>Líquidos serosos</div>
+<div class="secb">
+<div class="stitle purple">📊 Tipos de líquidos serosos</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Líquido</th><th>Localización</th><th>Obtención</th><th>Uso diagnóstico</th></tr><tr><td>Líquido pleural</td><td>Entre pleura parietal y visceral (pulmones)</td><td>Toracocentesis</td><td>Derrame pleural, infecciones, neoplasias</td></tr><tr><td>Líquido peritoneal (ascítico)</td><td>Cavidad abdominal</td><td>Paracentesis</td><td>Ascitis, peritonitis, neoplasias abdominales</td></tr><tr><td>Líquido pericárdico</td><td>Saco pericárdico (corazón)</td><td>Pericardiocentesis</td><td>Pericarditis, derrame pericárdico</td></tr></tbody></table></div></div>
+<div class="stitle "> Procesamiento general</div>
+<div class="cbody">
+<ul><li>Centrifugar para separar células</li><li>Analizar sobrenadante para bioquímica</li><li>Cultivo microbiológico si se sospecha infección</li><li>Citología para detección de células neoplásicas</li><li>Clasificar como trasudado o exudado (según proteinas/LDH)</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">7.3</span>Líquido sinovial (LISI)</div>
+<div class="secb">
+<div class="stitle "> Definición</div>
+<div class="cbody">
+<ul><li>Líquido viscoso que lubrica las articulaciones</li><li>Compuesto por ácido hialurónico, proteínas y células</li><li>Frecuente para estudio de artropatías</li></ul></div>
+<div class="stitle "> Obtención</div>
+<div class="cbody">
+<ul><li>Método: artrocentesis (punción articular)</li><li>Procedimiento estéril</li><li>Se extrae por aspiración con aguja</li></ul></div>
+<div class="stitle "> Análisis del líquido sinovial</div>
+<div class="cbody">
+<ul><li>Examen físico: color, viscosidad, claridad</li><li>Recuento celular: leucocitos (polimorfonucleares vs mononucleares)</li><li>Cristales: urato monosódico (gota), pirofosfato cálcico (pseudogota)</li><li>Microbiológico: Gram, cultivo</li><li>Bioquímico: glucosa, proteínas</li></ul></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U7</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">LCR: punción lumbar L3-L4 o L4-L5. LCR claro = normal. Turbio = meningitis</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Líquidos serosos: pleural (toracocentesis), peritoneal (paracentesis), pericárdico (pericardiocentesis)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Clasificar derrames: trasudado vs exudado (proteinas/LDH)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Líquido sinovial: artrocentesis. Cristales: urato (gota), pirofosfato (pseudogota)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Procesar LCR inmediatamente (células se degradan rápido)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Citología de líquidos: detección de células neoplásicas</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot "></div><div class="pdot "></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U7/10</span>
+<div class="nava"><button class="navb" onclick="xma(5,9)">‹</button>
+<button class="navb" onclick="xmi(7,9)">›</button></div></div></div>
+<div class="unit" id="u7">
+<div class="hero"><h2>🔬 <span class="c">U8:</span> Exudados y muestras especiales</h2><p>Exudados genitourinarios, conjuntivales, óticos, micosis cutáneas y muestras especiales (líquido amniótico, médula ósea, citología digestiva)</p>
+<div class="badges"><span class="badge b1">📖 3 secciones</span>
+<span class="badge b2">📄 8 temas</span>
+<span class="badge b3">🔬 U8</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">8.1</span>Exudados: concepto y tipos</div>
+<div class="secb">
+<div class="stitle "> Definición</div>
+<div class="cbody">
+<ul><li>Elementos extravasados en el proceso inflamatorio</li><li>Se depositan en el intersticio de los tejidos o cavidades del organismo</li><li>Indican procesos inflamatorios o infecciosos</li></ul></div>
+<div class="stitle "> Obtención y transporte general</div>
+<div class="cbody">
+<ul><li>Recoger con hisopo estéril de la zona afectada</li><li>Transportar en medio de cultivo específico (Stuart, Amies)</li><li>Conservar a temperatura ambiente</li><li>Procesar en menos de 2 horas o refrigerar</li></ul></div>
+<div class="stitle purple">🔲 Tipos de exudados</div>
+<div class="cbody">
+<div class="tbl"><table><tbody><tr><td>Exudados genitourinarios</td><td>Muestras de genitales, frecuentes en infecciones de cierta magnitud. Procesamiento: tinción Gram + cultivo en medios específicos</td></tr><tr><td>Exudados conjuntivales y corneales</td><td>Raspado conjuntival o corneal con hisopo. Cultivo para bacterias y hongos. Tinción Gram y Giemsa</td></tr><tr><td>Exudados óticos</td><td>Muestra del conducto auditivo externo. Frecuente en otitis. Cultivo bacteriano y fúngico</td></tr><tr><td>Exudados de úlceras y heridas</td><td>Hisopo de la zona más profunda de la herida. Cultivo aeróbico y anaeróbico</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">8.2</span>Micosis cutáneas</div>
+<div class="secb">
+<div class="stitle "> Obtención de muestras</div>
+<div class="cbody">
+<ul><li>Raspado de escamas de la piel con bisturí estéril</li><li>Recortes de uñas afectadas</li><li>Cabellos con raíz para infecciones del cuero cabelludo</li></ul></div>
+<div class="stitle "> Conservación y transporte</div>
+<div class="cbody">
+<ul><li>Colocar en recipiente estéril seco</li><li>NO refrigerar (los hongos se ven afectados por el frío)</li><li>Procesar en menos de 24 horas</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">8.3</span>Muestras especiales</div>
+<div class="secb">
+<div class="stitle "> Líquido amniótico</div>
+<div class="cbody">
+<ul><li>Obtenido por amniocentesis (semana 15-17)</li><li>Uso: diagnóstico prenatal de anomalías genéticas</li><li>Procesamiento: cultivo celular para cariotipo</li><li>También: análisis de alfafetoproteína, bilirrubina</li></ul></div>
+<div class="stitle "> Médula ósea</div>
+<div class="cbody">
+<ul><li>Obtención por aspiración (esternón o cresta ilíaca)</li><li>Uso: diagnóstico de leucemias, linfomas, mieloma</li><li>Procesamiento: extensión en portaobjetos, tinción</li><li>También para cultivo y citogenética</li></ul></div>
+<div class="stitle "> Citología exfoliativa del aparato digestivo</div>
+<div class="cbody">
+<ul><li>Obtención por cepillado endoscópico o lavado</li><li>Zonas: esófago, estómago, colon</li><li>Tinción: Papanicolau, Hematoxilina-Eosina</li><li>Uso: detección de lesiones premalignas y neoplasias</li></ul></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U8</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Exudados: elementos extravasados en proceso inflamatorio</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Transporte en medio Stuart/Amies, procesar <2h</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Exudados genitourinarios: Gram + cultivo en medios específicos</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Micosis cutáneas: raspado de escamas. NO refrigerar (hongos sensibles al frío)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Líquido amniótico: amniocentesis semana 15-17, diagnóstico prenatal</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Médula ósea: aspiración de esternón/cresta ilíaca para leucemias, linfomas</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Citología digestiva exfoliativa: cepillado endoscópico, tinción Papanicolau</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot "></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U8/10</span>
+<div class="nava"><button class="navb" onclick="xma(6,9)">‹</button>
+<button class="navb" onclick="xmi(8,9)">›</button></div></div></div>
+<div class="unit" id="u8">
+<div class="hero"><h2>🧬 <span class="c">U9:</span> Muestras de anatomía patológica y citodiagnóstico</h2><p>Histología vs citopatología, biopsias, piezas quirúrgicas, procesamiento de tejidos y muestras citológicas</p>
+<div class="badges"><span class="badge b1">📖 4 secciones</span>
+<span class="badge b2">📄 11 temas</span>
+<span class="badge b3">🧬 U9</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">9.1</span>Histología y citopatología</div>
+<div class="secb">
+<div class="stitle "> Definiciones</div>
+<div class="cbody">
+<ul><li>Histología: estudio general de los tejidos biológicos del cuerpo humano</li><li>Citopatología: ciencia que estudia alteraciones morfológicas de células desprendidas de tejidos</li></ul></div>
+<div class="stitle purple">📊 Diferencias principales</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Aspecto</th><th>Histología</th><th>Citopatología</th></tr><tr><td>Objeto de estudio</td><td>Tejidos (conjuntos de células organizadas)</td><td>Células individuales o grupos pequeños</td></tr><tr><td>Obtención</td><td>Biopsias, piezas quirúrgicas</td><td>Impronta, PAAF, raspado</td></tr><tr><td>Procesamiento</td><td>Fijación → Inclusión → Corte → Tinción</td><td>Extensión → Fijación → Tinción</td></tr><tr><td>Información</td><td>Arquitectura tisular y relaciones celulares</td><td>Morfología celular individual</td></tr></tbody></table></div></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">9.2</span>Biopsias</div>
+<div class="secb">
+<div class="stitle purple">📊 Tipos de biopsias</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Tipo</th><th>Descripción</th><th>Indicaciones</th></tr><tr><td>Biopsia incisional</td><td>Extirpación quirúrgica de una pequeña porción de la lesión</td><td>Lesiones grandes donde no se puede extirpar todo</td></tr><tr><td>Biopsia escisional</td><td>Extirpación completa de toda la lesión</td><td>Lesiones pequeñas potencialmente curables</td></tr><tr><td>Biopsia con aguja gruesa</td><td>Obtención de cilindro de tejido con aguja especial</td><td>Tumores profundos (mama, próstata, hígado)</td></tr></tbody></table></div></div>
+<div class="stitle "> Piezas quirúrgicas</div>
+<div class="cbody">
+<ul><li>Órganos completos o partes de ellos extirpados en cirugía</li><li>Requieren orientación anatómica por parte del cirujano</li><li>Se marcan con tinta de India para orientación histológica</li><li>Procesamiento completo para diagnóstico definitivo</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">9.3</span>Procesamiento de muestras de tejidos</div>
+<div class="secb">
+<div class="stitle "> Fijación</div>
+<div class="cbody">
+<ul><li>Preserva la morfología del tejido evitando autólisis y putrefacción</li><li>Fijador más común: formol tamponado al 10% (formaldehído 4%)</li><li>Tiempo de fijación: 24-48 h a temperatura ambiente</li><li>Volumen: 10-20 veces el volumen del tejido</li></ul></div>
+<div class="stitle purple">📌 Inclusión</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Deshidratación en alcoholes de concentración creciente (70% → 96% → 100%)</div><div class="dstep"><span class="arr">→</span>2️⃣ Aclaramiento en xileno (elimina el alcohol)</div><div class="dstep"><span class="arr">→</span>3️⃣ Infiltración en parafina líquida en estufa a 60°C</div><div class="dstep"><span class="arr">→</span>4️⃣ Inclusión en bloque de parafina (orientación del tejido)</div></div></div>
+<div class="stitle "> Corte (microtomía)</div>
+<div class="cbody">
+<ul><li>Microtomo: equipo para cortar secciones finas del bloque de parafina</li><li>Grosor habitual: 3-5 micrómetros</li><li>Las secciones se colocan en baño de flotación (agua tibia 40-45°C)</li><li>Se recogen en portaobjetos para tinción</li></ul></div>
+<div class="stitle "> Tinción</div>
+<div class="cbody">
+<ul><li>Hematoxilina-Eosina (H&E): tinción de rutina más común</li><li>Hematoxilina: tiñe núcleos (azul/violeta)</li><li>Eosina: tiñe citoplasma y matriz extracelular (rosa)</li><li>Otras tinciones: Tricrómico, PAS, Reticulina, Inmunohistoquímica</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">9.4</span>Muestras citológicas</div>
+<div class="secb">
+<div class="stitle "> Impronta citológica</div>
+<div class="cbody">
+<ul><li>Presionar suavemente el tejido fresco contra un portaobjetos</li><li>Las células se adhieren al vidrio</li><li>Rápido, útil para diagnóstico intraoperatorio</li><li>Tinción: Diff-Quik o Papanicolau</li></ul></div>
+<div class="stitle "> PAAF (Punción Aspiración con Aguja Fina)</div>
+<div class="cbody">
+<ul><li>Inserción de aguja fina (22-25G) en la lesión</li><li>Aspiración con presión negativa</li><li>Zonas: tiroides, mama, ganglios, partes blandas</li><li>Extensión del material en portaobjetos</li><li>Fijación y tinción (Papanicolau, Diff-Quik)</li></ul></div>
+<div class="stitle purple">📌 Procesamiento de citologías</div>
+<div class="cbody">
+<div class="dia"><div class="dstep"><span class="arr">→</span>1️⃣ Extensión de la muestra en portaobjetos</div><div class="dstep"><span class="arr">→</span>2️⃣ Fijación inmediata (alcohol 96% o citospray)</div><div class="dstep"><span class="arr">→</span>3️⃣ Tinción (Papanicolau, H&E, Diff-Quik)</div><div class="dstep"><span class="arr">→</span>4️⃣ Montaje con cubreobjetos y resina</div><div class="dstep"><span class="arr">→</span>5️⃣ Observación al microscopio y diagnóstico</div></div></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U9</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Histología: estudia tejidos. Citopatología: estudia células individuales</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Biopsia incisional (porción) vs escisional (completa) vs aguja gruesa (cilindro)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Procesamiento tejidos: Fijación (formol 10%) → Inclusión (parafina) → Corte (3-5µm) → Tinción (H&E)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Hematoxilina: núcleos azules. Eosina: citoplasma rosa</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">PAAF: aguja fina 22-25G, aspiración con presión negativa</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Impronta: presionar tejido fresco contra portaobjetos, rápido intraoperatorio</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Citología: extensión → fijación inmediata (alcohol 96%) → tinción → montaje</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot "></div></div><span style="font-size:10px;color:var(--t2)">U9/10</span>
+<div class="nava"><button class="navb" onclick="xma(7,9)">‹</button>
+<button class="navb" onclick="xmi(9,9)">›</button></div></div></div>
+<div class="unit" id="u9">
+<div class="hero"><h2>🧊 <span class="c">U10:</span> Muestras de biobancos y animales de experimentación</h2><p>Biobancos, procesamiento y conservación de muestras, marco ético-jurídico y animales de laboratorio</p>
+<div class="badges"><span class="badge b1">📖 6 secciones</span>
+<span class="badge b2">📄 15 temas</span>
+<span class="badge b3">🧊 U10</span></div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">10.1</span>Concepto y características de los biobancos</div>
+<div class="secb">
+<div class="stitle "> Definición</div>
+<div class="cbody">
+<ul><li>Instalaciones donde se almacenan muestras biológicas con fines de investigación</li><li>Reservas de material biológico para uso futuro en tratamientos</li></ul></div>
+<div class="stitle "> Origen y funciones</div>
+<div class="cbody">
+<ul><li>Registro del material donado voluntariamente</li><li>Registro de material no recogido o gestionado para investigación</li><li>Destino de los excedentes</li><li>Fines: investigación, tratamientos futuros</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">10.2</span>Obtención y preparación de muestras</div>
+<div class="secb">
+<div class="stitle "> Tumores y tejidos sanos</div>
+<div class="cbody">
+<ul><li>Procedentes de cirugías (piezas quirúrgicas)</li><li>Tejido tumoral y tejido sano adyacente (control)</li><li>Procesamiento inmediato tras la extirpación</li></ul></div>
+<div class="stitle "> Fluidos y células</div>
+<div class="cbody">
+<ul><li>Sangre, plasma, suero, orina, LCR</li><li>Células ex vivo: proceden directamente de tejidos de personas</li><li>Importante: conservar la viabilidad celular</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">10.3</span>Procesamiento de muestras</div>
+<div class="secb">
+<div class="stitle "> Tejidos y tumores</div>
+<div class="cbody">
+<ul><li>Fragmentaci ón en porciones pequeñas</li><li>Congelación rápida en nitrógeno líquido (-196°C)</li><li>Inclusión en parafina para estudios histológicos</li></ul></div>
+<div class="stitle "> ADN y ARN</div>
+<div class="cbody">
+<ul><li>Extracción con kits específicos</li><li>Conservación a -80°C</li><li>Evaluación de calidad (A260/A280, integridad)</li></ul></div>
+<div class="stitle "> Células</div>
+<div class="cbody">
+<ul><li>Criopreservación en medio con DMSO al 10%</li><li>Congelación gradual (-1°C/min)</li><li>Almacenamiento en nitrógeno líquido</li></ul></div>
+<div class="stitle "> Fluidos</div>
+<div class="cbody">
+<ul><li>Centrifugación para separar componentes</li><li>Alicuotado para evitar ciclos de congelación-descongelación</li><li>Almacenamiento a -80°C</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">10.4</span>Conservación y transporte de muestras</div>
+<div class="secb">
+<div class="stitle purple">📊 Métodos de conservación</div>
+<div class="cbody">
+<div class="tbl"><table><tr><th>Método</th><th>Temperatura</th><th>Tipo de muestra</th><th>Duración</th></tr><tr><td>Refrigeración</td><td>4°C</td><td>Fluidos, tejidos frescos</td><td>Corto plazo (días)</td></tr><tr><td>Congelación</td><td>-20°C</td><td>Plasma, suero</td><td>Medio plazo (meses)</td></tr><tr><td>Ultracongelación</td><td>-80°C</td><td>ADN, ARN, tejidos</td><td>Largo plazo (años)</td></tr><tr><td>Nitrógeno líquido</td><td>-196°C</td><td>Células, tejidos viables</td><td>Indefinido</td></tr></tbody></table></div></div>
+<div class="stitle "> Transporte</div>
+<div class="cbody">
+<ul><li>Cadena de frío: mantener temperatura constante</li><li>Contenedores isotérmicos con hielo seco o packs refrigerantes</li><li>Identificación clara de cada muestra</li><li>Documentación de trazabilidad</li><li>Cumplir normativa de transporte de muestras biológicas</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">10.5</span>Marco ético y jurídico</div>
+<div class="secb">
+<div class="stitle "> Aspectos éticos</div>
+<div class="cbody">
+<ul><li>Consentimiento informado del donante</li><li>Confidencialidad de datos (anonimización)</li><li>Uso exclusivo para fines de investigación autorizados</li></ul></div>
+<div class="stitle "> Legislación aplicable</div>
+<div class="cbody">
+<ul><li>Ley de Investigación Biomédica</li><li>Reglamento de Biobancos</li><li>LOPD y Reglamento General de Protección de Datos (RGPD)</li></ul></div>
+</div></div>
+<div class="secc">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">10.6</span>Animales de laboratorio</div>
+<div class="secb">
+<div class="stitle purple">🔲 Principales tipos</div>
+<div class="cbody">
+<div class="tbl"><table><tbody><tr><td>Roedores</td><td>Ratones y ratas: los más usados en investigación biomédica. Genéticamente modificables, ciclo reproductivo corto</td></tr><tr><td>Conejos</td><td>Usados en inmunología, producción de anticuerpos y pruebas de irritación</td></tr><tr><td>Peces cebra</td><td>Modelo vertebrado para genética del desarrollo, toxicología</td></tr><tr><td>Primates no humanos</td><td>Modelos más cercanos al humano. Uso restringido por cuestiones éticas</td></tr></tbody></table></div></div>
+<div class="stitle "> Manipulación y bienestar</div>
+<div class="cbody">
+<ul><li>Alojamiento en condiciones controladas (temperatura, humedad, ciclo luz/oscuridad)</li><li>Alimentación y agua ad libitum</li><li>Enriquecimiento ambiental</li><li>Personal entrenado y cualificado</li></ul></div>
+<div class="stitle "> Aspectos éticos y legislación</div>
+<div class="cbody">
+<ul><li>Principio de las 3Rs: Reemplazar, Reducir, Refinar</li><li>Directiva 2010/63/UE de protección de animales utilizados para fines científicos</li><li>Real Decreto 53/2013 en España</li><li>Comité de Ética de Experimentación Animal: aprueba todos los protocolos</li></ul></div>
+</div></div>
+<div class="secc" style="border-left:3px solid var(--y)">
+<div class="sech" onclick="tsec(this)"><span class="arrow">▶</span><span class="num">⭐</span> Puntos Clave</div>
+<div class="secb"><div class="stitle orange">Lo más importante de U10</div><div class="cbody"><ul>
+<li style="font-size:12px;color:var(--y);font-weight:500">Biobancos: instalaciones para almacenar muestras biológicas con fines de investigación</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Células ex vivo: proceden directamente de tejidos de personas</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Conservación: 4°C (días) → -20°C (meses) → -80°C (años) → N₂ líquido -196°C (indefinido)</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Criopreservación celular: DMSO 10%, congelación gradual -1°C/min</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Transporte: cadena de frío constante, contenedores isotérmicos, trazabilidad</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Principio 3Rs en animales: Reemplazar, Reducir, Refinar</li>
+<li style="font-size:12px;color:var(--y);font-weight:500">Directiva 2010/63/UE y RD 53/2013: legislación sobre experimentación animal</li>
+</ul></div></div></div>
+<div class="pwrap">
+<div class="pbar"><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div><div class="pdot a"></div></div><span style="font-size:10px;color:var(--t2)">U10/10</span>
+<div class="nava"><button class="navb" onclick="xma(8,9)">‹</button>
+<button class="navb" onclick="xmi(10,9)">›</button></div></div></div>
+</div><button class="st" id="st" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+let cu=0;
+function x(i){let u=document.getElementById('u'+i);let b=document.querySelectorAll('.nav-btn');
+  document.querySelectorAll('.unit').forEach(e=>e.classList.remove('active'));
+  b.forEach(e=>e.classList.remove('active'));
+  if(u)u.classList.add('active');if(b[i])b[i].classList.add('active');cu=i;window.scrollTo({top:0,behavior:'smooth'});
+}
+function xma(i,m){if(i>=0)x(i)}
+function xmi(i,m){if(i<=m)x(i)}
+function su(q){q=q.toLowerCase().trim();
+  if(!q){x(cu);return;}
+  document.querySelectorAll('.unit').forEach((u,i)=>{
+    let m=u.textContent.toLowerCase().includes(q);
+    u.classList.toggle('active',m);
+    let b=document.querySelectorAll('.nav-btn');
+    if(b[i])b[i].classList.toggle('active',m);
+  });
+}
+function tsec(el){let b=el.nextElementSibling;if(!b)return;
+  b.classList.toggle('open');
+  el.querySelector('.arrow').classList.toggle('o',b.classList.contains('open'));
+}
+window.addEventListener('scroll',()=>{document.getElementById('st').classList.toggle('v',window.scrollY>300)});
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();x(Math.min(cu+1,9));}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();x(Math.max(cu-1,0));}
+});
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].screenX});
+document.addEventListener('touchend',e=>{
+  if(e.target.tagName==='INPUT')return;
+  let d=e.changedTouches[0].screenX-tx;
+  if(Math.abs(d)>80)x(Math.max(0,Math.min(9,cu-(d>0?1:-1))));
+});
+</script>
+</body>
+</html>
