@@ -991,9 +991,69 @@ key_points = {
     ]
 }
 
+quiz_questions = [
+    ("¿Cómo debe ser el aspecto del líquido amniótico en condiciones de gestación saludable?", "Transparente y de color amarillento"),
+    ("¿Cuál de los siguientes métodos de eutanasia para animales no es aceptable en ninguna situación?", "Hipotermia"),
+    ("¿Cuál de los siguientes no es un anticoagulante?", "Cisteína"),
+    ("¿Cuál de los siguientes no es un sistema de control de existencias?", "FITO"),
+    ("¿Cuál es el método recomendado para tomar muestras de infecciones de lesiones en la piel en zonas profundas de difícil acceso?", "Aspiración con suero o solución de Ringer lactato"),
+    ("¿Cuál es el propósito de dividir una muestra de LCR en tres tubos después de su extracción?", "Para permitir diferentes análisis en cada tubo"),
+    ("¿En qué informe se valora la concentración de los elementos celulares de la sangre (elementos formes) para determinar si existen alteraciones relacionadas con patologías?", "Hemograma"),
+    ("¿Qué medio de los siguientes se utiliza para el traslado y conservación de muestras genitourinarias?", "Amies"),
+    ("¿Qué nivel de hemoglobina en plasma indica hemólisis notable?", "0,3 g/L"),
+    ("¿Qué nombre recibe la membrana de tejido conjuntivo con numerosos capilares y vasos linfáticos y a través de la cual pasa el plasma, sufriendo un proceso de ultrafiltración para dar lugar a los líquidos serosos?", "Serosa"),
+    ("¿Qué podría indicar la orina si se presenta de color verdoso?", "Exceso de bilirrubina"),
+    ("¿Qué tipo de biopsia retira completamente la lesión?", "Escisional"),
+    ("¿Qué tipo de exudados se producen en el oído?", "Exudados óticos"),
+    ("¿Qué tipo de muestra es el esputo?", "Secreción"),
+    ("Animales cuya microflora y microfauna conocemos y podemos tener en cuenta la hora de investigar.", "Animales gnotobióticos"),
+    ("Animales de experimentación que carecen completamente de microorganismos asociados y se crían en condiciones de esterilidad.", "Animales axénicos"),
+    ("Cristales de minerales (principalmente calcio), que aparecen en algunas patologías como la tuberculosis o adenocarcinomas. Se encuentran en muestras de esputo.", "Cuerpos de Psamoma"),
+    ("Cuando trabajamos en un laboratorio se corresponde con información genérica.", "Beneficios esperados del estudio"),
+    ("Cuando un análisis solo tiene como objetivo revelar la presencia o ausencia de un patógeno, es de carácter.", "Cualitativo"),
+    ("El sedimento urinario se obtiene por.", "Centrifugación"),
+    ("El trabajo en el laboratorio comienza con.", "La recepción de muestras"),
+    ("En el análisis bioquímico del LCR, la cantidad excesiva de lactato indica.", "Falta de oxígeno"),
+    ("En una muestra de orina, ¿cuándo sería necesario añadir conservantes?", "Para determinaciones bacterianas mediante urocultivos y para evitar refrigeración"),
+    ("Es un criterio de rechazo por lo que la muestra no se encuentra en condiciones para analizarla.", "Muestra lipémica"),
+    ("Estado en el que se pierde es la sensación de dolor.", "Analgesia"),
+    ("Factores que pueden afectar a los resultados de los análisis, alterando los resultados esperados de una u otra manera.", "Variabilidad preanalítica"),
+    ("Fase que consiste en la interpretación de resultados y la conservación adecuada de las muestras para repetir las pruebas en caso de que fuese necesario.", "Fase posanalítica"),
+    ("Hace referencia al conjunto de instituciones, personal especializado, normas y medios que proporcionan asistencia sanitaria a una población.", "Sistema sanitario"),
+    ("La liberación de los componentes internos de los glóbulos rojos por rotura recibe el nombre de.", "Hemólisis"),
+    ("La punción percutánea lumbar es un método de obtención de LCR mediante la inserción de una aguja en el espacio intervertebral entre.", "A y B son correctas"),
+    ("Las muestras compuestas por toda la totalidad de la orina secretada en un día se conocen como.", "Orina de 24 horas"),
+    ("Las siglas SNS indican.", "Sistema Nacional de Salud"),
+    ("Líquido secretado por los epitelios de los pulmones que se utiliza para la determinación del origen de las enfermedades.", "Esputo"),
+    ("Los coprocultivos son cultivos microbiológicos de.", "Heces"),
+    ("Los laboratorios que envían las muestras al laboratorio central en la metodología \"core lab\" se denominan.", "Laboratorios satélite"),
+    ("Mezcla de glicosaminglicanos que inhibe la activación de protrombina a trombina, evitando que la sangre coagule.", "Heparina"),
+    ("Para la toma de muestras de semen, la abstinencia debe ser de.", "3 días"),
+    ("Parte del SNS dedicada a asuntos de salud menos graves o a las primeras atenciones de afecciones graves.", "Atención primaria"),
+    ("Preparaciones obtenidas directamente por contacto con algunos tejidos que tienden a desprender células fácilmente.", "Improntas"),
+    ("Productos elaborados a partir de la sangre de donantes de uso directo. Contienen elementos celulares y/o sustancias contenidas en ellos.", "Hemocomponentes"),
+]
+
+quiz_sections = []
+for i in range(0, len(quiz_questions), 10):
+    rows = [["Pregunta", "Respuesta correcta"]]
+    rows.extend([list(row) for row in quiz_questions[i:i + 10]])
+    quiz_sections.append(sec(f"Q.{(i // 10) + 1}", f"Preguntas {i + 1}-{min(i + 10, len(quiz_questions))}", [
+        ("Cuestionario", "table", rows)
+    ]))
+
+units.append({
+    "code": "Quiz",
+    "title": "Cuestionario de repaso",
+    "emoji": "📝",
+    "desc": "Preguntas de práctica con solo la respuesta correcta",
+    "sections": quiz_sections
+})
+
 # ============= HTML generation =============
 
 total_units = len(units)
+last_unit_index = total_units - 1
 
 html = '''<!DOCTYPE html>
 <html lang="es">
@@ -1080,7 +1140,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </head>
 <body>
 <div class="topbar">
-  <div><h1>🧬 Gestión de Muestras Biológicas</h1><div class="sub">Guía interactiva de estudio • 10 unidades</div></div>
+  <div><h1>🧬 Gestión de Muestras Biológicas</h1><div class="sub">Guía interactiva de estudio • 10 unidades + cuestionario</div></div>
   <input class="searchbox" id="s" placeholder="\\ud83d\\udd0d Buscar..." oninput="su(this.value)">
 </div>
 <div class="nav" id="nav">'''
@@ -1222,7 +1282,7 @@ function tsec(el){let b=el.nextElementSibling;if(!b)return;
 window.addEventListener('scroll',()=>{document.getElementById('st').classList.toggle('v',window.scrollY>300)});
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT')return;
-  if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();x(Math.min(cu+1,9));}
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();x(Math.min(cu+1,__LAST_UNIT_INDEX__));}
   if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();x(Math.max(cu-1,0));}
 });
 let tx=0;
@@ -1230,11 +1290,13 @@ document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].screenX});
 document.addEventListener('touchend',e=>{
   if(e.target.tagName==='INPUT')return;
   let d=e.changedTouches[0].screenX-tx;
-  if(Math.abs(d)>80)x(Math.max(0,Math.min(9,cu-(d>0?1:-1))));
+  if(Math.abs(d)>80)x(Math.max(0,Math.min(__LAST_UNIT_INDEX__,cu-(d>0?1:-1))));
 });
 </script>
 </body>
 </html>'''
+
+html = html.replace("__LAST_UNIT_INDEX__", str(last_unit_index))
 
 # Write to file
 output_path = '/home/jeikson/.openclaw/workspace/muestras-biologicas-guia/index.html'
